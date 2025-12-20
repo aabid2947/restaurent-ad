@@ -39,10 +39,19 @@ This is a simple Express.js backend for the Advertisement Display System.
 *   **Heartbeat:** `POST /v1/player/heartbeat`
     *   Body: `{ "device_token": "...", "status": "playing", "app_version": "1.0.0" }`
 
+### User Authentication
+
+*   **Register:** `POST /v1/users/register`
+    *   Body: `{ "name": "...", "email": "...", "password": "..." }`
+    *   Returns: User object with `_id`.
+*   **Login:** `POST /v1/users/login`
+    *   Body: `{ "email": "...", "password": "..." }`
+    *   Returns: User object with `_id`.
+
 ### Admin / User
 
 *   **Claim Device:** `POST /v1/admin/claim-device`
-    *   Body: `{ "pairing_code": "123456", "user_id": "user123" }`
+    *   Body: `{ "pairing_code": "123456", "user_id": "user_id_from_login" }`
     *   Links a pending device to a user account.
 *   **Upload Media:** `POST /v1/admin/upload`
     *   Body: `media_file` (Multipart), `user_id`
@@ -50,6 +59,6 @@ This is a simple Express.js backend for the Advertisement Display System.
 *   **Create Playlist:** `POST /v1/admin/playlist`
     *   Body: `{ "user_id": "...", "name": "...", "assets": [...] }`
 *   **Assign Playlist:** `POST /v1/admin/assign-playlist`
-    *   Body: `{ "device_token": "...", "playlist_id": "..." }`
+    *   Body: `{ "device_token": "...", "playlist_id": "...", "user_id": "..." }`
 *   **Sync Status:** `GET /v1/admin/sync-status?user_id=...&playlist_id=...`
     *   Returns download status of devices.

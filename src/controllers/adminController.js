@@ -1,6 +1,7 @@
 import Device from '../models/Device.js';
 import Playlist from '../models/Playlist.js';
 import { MediaAsset } from '../models/MediaAsset.js';
+import User from '../models/User.js';
 import cloudinary from '../config/cloudinary.js';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,6 +13,12 @@ export const claimDevice = async (req, res) => {
   const { pairing_code, user_id } = req.body;
 
   try {
+    // Verify user exists
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     const device = await Device.findOne({ pairing_code });
 
     if (!device) {
@@ -43,6 +50,13 @@ export const uploadMedia = async (req, res) => {
   }
 
   try {
+    // Verify user exists
+    const user = await User.findById(user_id);
+    if (!user) {
+      if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     // Upload to Cloudinary
     const result = await cloudinary.uploader.upload(file.path, {
       resource_type: "auto", // auto-detect image or video
@@ -89,6 +103,12 @@ export const getSyncStatus = async (req, res) => {
   const { user_id, playlist_id } = req.query;
 
   try {
+    // Verify user exists
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     // Find all devices for this user that are assigned this playlist
     const devices = await Device.find({ user_id, playlist_id });
 
@@ -111,6 +131,12 @@ export const createPlaylist = async (req, res) => {
   const { user_id, name, assets } = req.body; // assets is array of MediaAsset objects
 
   try {
+    // Verify user exists
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     const playlist_id = uuidv4();
     
     const playlist = await Playlist.create({
@@ -131,11 +157,22 @@ export const createPlaylist = async (req, res) => {
 // @route   POST /v1/admin/assign-playlist
 // @access  Private (Admin/User)
 export const assignPlaylist = async (req, res) => {
-  const { device_token, playlist_id } = req.body;
+  const { device_token, playlist_id, user_id } = req.body;
 
   try {
+    // Verify user exists
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     const device = await Device.findOne({ device_token });
     if (!device) return res.status(404).json({ message: 'Device not found' });
+
+    // Check ownership
+    if (device.user_id !== user_id) {
+      return res.status(403).json({ message: 'Not authorized to manage this device' });
+    }
 
     const playlist = await Playlist.findOne({ playlist_id });
     if (!playlist) return res.status(404).json({ message: 'Playlist not found' });

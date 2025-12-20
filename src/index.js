@@ -4,6 +4,7 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import displayRoutes from './routes/v1/displayRoutes.js';
 import adminRoutes from './routes/v1/adminRoutes.js';
+import userRoutes from './routes/v1/userRoutes.js';
 
 dotenv.config();
 
@@ -28,6 +29,10 @@ app.use('/v1', displayRoutes);
 // Admin Routes
 // Mounted at /v1/admin
 app.use('/v1/admin', adminRoutes);
+
+// User Routes
+// Mounted at /v1/users
+app.use('/v1/users', userRoutes);
 
 // Root route
 app.get('/', (req, res) => {
