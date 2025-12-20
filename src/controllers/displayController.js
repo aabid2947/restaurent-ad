@@ -1,5 +1,6 @@
 import Device from '../models/Device.js';
 import Playlist from '../models/Playlist.js';
+import User from '../models/User.js';
 import { v4 as uuidv4 } from 'uuid';
 import { generatePairingCode } from '../utils/generateCode.js';
 
@@ -48,6 +49,16 @@ export const pairDevice = async (req, res) => {
       return res.status(202).json({ message: 'Waiting for user to claim device' });
     }
 
+    // Verify that the user actually exists (in case of deleted users)
+    const user = await User.findById(device.user_id);
+    if (!user) {
+      // Reset the device if the user no longer exists
+      device.user_id = null;
+      device.status = 'unpaired';
+      await device.save();
+      return res.status(202).json({ message: 'Waiting for user to claim device' });
+    }
+
     // If already paired and has token, return it
     if (device.device_token) {
       return res.status(200).json({
@@ -92,6 +103,14 @@ export const getConfig = async (req, res) => {
 
     if (!device) {
       return res.status(404).json({ message: 'Device not found' });
+    }
+
+    // Optional: Verify user existence for active playback
+    if (device.user_id) {
+      const user = await User.findById(device.user_id);
+      if (!user) {
+        return res.status(403).json({ message: 'Device owner no longer exists' });
+      }
     }
 
     if (!device.playlist_id) {
