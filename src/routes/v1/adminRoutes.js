@@ -5,7 +5,9 @@ import {
   saveMediaMetadata,
   getSyncStatus,
   createPlaylist,
-  assignPlaylist
+  assignPlaylist,
+  getDevices,
+  getPlaylists
 } from '../../controllers/adminController.js';
 
 const router = express.Router();
@@ -17,5 +19,7 @@ router.post('/save-media', saveMediaMetadata);
 router.get('/sync-status', getSyncStatus);
 router.post('/playlist', createPlaylist);
 router.post('/assign-playlist', assignPlaylist);
+router.get('/devices', getDevices);
+router.get('/playlists', getPlaylists);
 
 export default router;

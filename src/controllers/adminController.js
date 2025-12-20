@@ -206,3 +206,41 @@ export const assignPlaylist = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// @desc    Get all devices for a user
+// @route   GET /v1/admin/devices
+// @access  Private (Admin/User)
+export const getDevices = async (req, res) => {
+  const { user_id } = req.query;
+
+  try {
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const devices = await Device.find({ user_id });
+    res.status(200).json(devices);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get all playlists for a user
+// @route   GET /v1/admin/playlists
+// @access  Private (Admin/User)
+export const getPlaylists = async (req, res) => {
+  const { user_id } = req.query;
+
+  try {
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const playlists = await Playlist.find({ user_id });
+    res.status(200).json(playlists);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
