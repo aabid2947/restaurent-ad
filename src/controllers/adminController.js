@@ -38,61 +38,80 @@ export const claimDevice = async (req, res) => {
   }
 };
 
-// @desc    Upload media asset
-// @route   POST /v1/admin/upload
+// @desc    Generate Cloudinary Upload Signature
+// @route   POST /v1/admin/upload-signature
 // @access  Private (Admin/User)
-export const uploadMedia = async (req, res) => {
+export const generateUploadSignature = async (req, res) => {
   const { user_id } = req.body;
-  const file = req.file;
 
-  if (!file) {
-    return res.status(400).json({ message: 'No file uploaded' });
+  try {
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const timestamp = Math.round((new Date).getTime() / 1000);
+    const folder = `advertisement/${user_id}`;
+
+    // Parameters to sign. MUST match exactly what is sent to Cloudinary
+    const paramsToSign = {
+      timestamp: timestamp,
+      folder: folder,
+    };
+
+    const signature = cloudinary.utils.api_sign_request(paramsToSign, process.env.CLOUDINARY_API_SECRET);
+
+    res.status(200).json({
+      timestamp,
+      signature,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      folder,
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
+};
+
+// @desc    Save Media Metadata (After direct upload)
+// @route   POST /v1/admin/save-media
+// @access  Private (Admin/User)
+export const saveMediaMetadata = async (req, res) => {
+  const { user_id, file_url, public_id, resource_type, duration, original_filename } = req.body;
 
   try {
     // Verify user exists
     const user = await User.findById(user_id);
     if (!user) {
-      if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Upload to Cloudinary
-    const result = await cloudinary.uploader.upload(file.path, {
-      resource_type: "auto", // auto-detect image or video
-      folder: `advertisement/${user_id}`,
-    });
-
-    // Remove local file
-    fs.unlinkSync(file.path);
-
-    // Create MediaAsset record (Optional but good for management)
-    // Note: The spec just says return file_url, but we need to store it to use in playlists
     const asset = new MediaAsset({
       asset_id: uuidv4(),
-      file_url: result.secure_url,
-      type: result.resource_type, // 'image' or 'video'
-      playback_duration: result.duration || 10, // Default 10s for images, video duration from cloudinary
-      original_filename: file.originalname,
+      file_url: file_url,
+      type: resource_type, // 'image' or 'video'
+      playback_duration: duration || (resource_type === 'video' ? 0 : 10), // Default 10s for images if not provided
+      original_filename: original_filename,
+      // We can store public_id if we want to delete it later from Cloudinary
+      // public_id: public_id 
     });
 
-    // We are not saving Asset to a global collection in this simple version unless needed, 
-    // but let's return the details so the frontend can add it to a playlist.
-    // Or better, let's save it if we want a library.
-    // For now, I'll just return the URL as per spec, but also the asset object.
-    
+    // Persist metadata
+    await asset.save();
+
     res.status(200).json({
-      file_url: result.secure_url,
-      asset_id: asset.asset_id,
-      type: asset.type,
-      playback_duration: asset.playback_duration
+      message: 'Media metadata saved successfully',
+      asset: {
+        asset_id: asset.asset_id,
+        file_url: asset.file_url,
+        type: asset.type,
+        playback_duration: asset.playback_duration,
+        original_filename: asset.original_filename
+      }
     });
 
   } catch (error) {
-    console.error(error);
-    // Try to remove local file if error
-    if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
-    res.status(500).json({ message: 'Upload failed', error: error.message });
+    res.status(500).json({ message: 'Failed to save metadata', error: error.message });
   }
 };
 
