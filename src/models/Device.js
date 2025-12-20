@@ -6,6 +6,7 @@ const deviceSchema = new mongoose.Schema({
   device_token: {
     type: String,
     unique: true,
+    sparse: true
     // This will be generated upon successful pairing
   },
   user_id: {

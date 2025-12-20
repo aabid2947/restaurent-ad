@@ -3,7 +3,7 @@ import Playlist from '../models/Playlist.js';
 import User from '../models/User.js';
 import { v4 as uuidv4 } from 'uuid';
 import { generatePairingCode } from '../utils/generateCode.js';
-
+import mongoose from 'mongoose';
 // @desc    Generate a pairing code for the device to display
 // @route   GET /v1/displays/generate-code
 // @access  Public (Device)
@@ -12,21 +12,31 @@ export const generateCode = async (req, res) => {
     let code;
     let isUnique = false;
 
+    // const collections = await mongoose.connection.db.listCollections({ name: 'devices' }).toArray();
+    //   if (collections.length > 0) {
+    //     // This drops the specific problematic index
+    //     await mongoose.connection.db.collection('devices').dropIndex('device_token_1');
+    //     console.log('Successfully dropped old device_token index.');
+    //   }
+
     // Ensure code uniqueness
     while (!isUnique) {
       code = generatePairingCode();
       const existingDevice = await Device.findOne({ pairing_code: code });
       if (!existingDevice) isUnique = true;
     }
+    console.log(`Generated unique pairing code: ${code}`);
 
     // Create a temporary device record
     const device = await Device.create({
       pairing_code: code,
       status: 'unpaired'
     });
+    console.log(`Created device record with ID: ${device._id}`);
 
     res.status(200).json({ pairing_code: code });
   } catch (error) {
+    console.error('Error generating pairing code:', error);
     res.status(500).json({ message: error.message });
   }
 };
