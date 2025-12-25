@@ -77,7 +77,7 @@ export const generateUploadSignature = async (req, res) => {
 // @route   POST /v1/admin/save-media
 // @access  Private (Admin/User)
 export const saveMediaMetadata = async (req, res) => {
-  const { user_id, file_url, public_id, resource_type, duration, original_filename } = req.body;
+  const { user_id, file_url, public_id, resource_type, duration, original_filename, priority } = req.body;
 
   try {
     // Verify user exists
@@ -92,6 +92,7 @@ export const saveMediaMetadata = async (req, res) => {
       type: resource_type, // 'image' or 'video'
       playback_duration: duration || (resource_type === 'video' ? 0 : 10), // Default 10s for images if not provided
       original_filename: original_filename,
+      priority: priority || 1,
       // We can store public_id if we want to delete it later from Cloudinary
       // public_id: public_id 
     });
@@ -106,7 +107,8 @@ export const saveMediaMetadata = async (req, res) => {
         file_url: asset.file_url,
         type: asset.type,
         playback_duration: asset.playback_duration,
-        original_filename: asset.original_filename
+        original_filename: asset.original_filename,
+        priority: asset.priority
       }
     });
 
@@ -147,7 +149,7 @@ export const getSyncStatus = async (req, res) => {
 // @route   POST /v1/admin/playlist
 // @access  Private (Admin/User)
 export const createPlaylist = async (req, res) => {
-  const { user_id, name, assets } = req.body; // assets is array of MediaAsset objects
+  const { user_id, name, assets, schedule } = req.body; // assets is array of MediaAsset objects
 
   try {
     // Verify user exists
@@ -163,6 +165,7 @@ export const createPlaylist = async (req, res) => {
       user_id,
       name,
       display_sequence: assets, // Expects array of objects matching mediaAssetSchema
+      schedule: schedule || { type: 'all_day', startTime: '00:00', endTime: '23:59' }, // Default schedule
       last_updated: Date.now()
     });
 

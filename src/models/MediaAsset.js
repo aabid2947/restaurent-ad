@@ -26,6 +26,10 @@ const mediaAssetSchema = new mongoose.Schema({
     // required: true, // Optional for now, can be added if we implement checksum calculation
   },
   original_filename: String, // Helper for admin UI
+  priority: {
+    type: Number,
+    default: 1, // Default priority 1. Higher number = higher priority/frequency
+  },
   uploaded_at: {
     type: Date,
     default: Date.now,

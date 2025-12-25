@@ -20,6 +20,16 @@ const playlistSchema = new mongoose.Schema({
   // The ordered list of assets to be played
   display_sequence: [mediaAssetSchema], 
   
+  schedule: {
+    startTime: String, // e.g., "08:00"
+    endTime: String,   // e.g., "11:00"
+    type: { 
+      type: String, 
+      enum: ['breakfast', 'lunch', 'dinner', 'all_day', 'custom'],
+      default: 'all_day'
+    }
+  },
+
   last_updated: {
     type: Date,
     default: Date.now,
