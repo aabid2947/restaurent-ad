@@ -234,6 +234,23 @@ export const getDevices = async (req, res) => {
   }
 };
 
+// @desc Get user media links
+// @route GET /v1/admin/save-user-media-links
+export const getUserMediaLinks = async (req, res) => {
+  const { user_id } = req.query;
+  try {
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const allMedia = await MediaAsset.find({ user_id });
+    res.status(200).json({ allMedia });
+  }
+  catch (error) {
+    res.status(500).json({ message: error.message });
+  } 
+};
+
 // @desc    Get all playlists for a user
 // @route   GET /v1/admin/playlists
 // @access  Private (Admin/User)
