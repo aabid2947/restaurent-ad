@@ -1,8 +1,22 @@
 import mongoose from 'mongoose';
-import { mediaAssetSchema } from './MediaAsset.js';
+
+const scheduleSchema = new mongoose.Schema({
+  startTime: { type: String, required: true }, // "HH:MM"
+  endTime: { type: String, required: true },   // "HH:MM"
+  daysOfWeek: [{ type: Number, min: 0, max: 6 }], // 0=Sun, 1=Mon...
+  startDate: Date, // Optional: for date ranges
+  endDate: Date,   // Optional
+  priority: { type: Number, default: 1 } // Schedule specific priority (optional override)
+});
+
+const playlistItemSchema = new mongoose.Schema({
+  asset_id: { type: String, required: true }, // Reference to MediaAsset.asset_id
+  order: { type: Number, required: true },
+  duration: { type: Number }, // Override duration for this specific playlist item
+  type: { type: String, enum: ['video', 'image'] } // Cached type for easier frontend rendering
+});
 
 // Schema for Playlist Configuration
-// This corresponds to the "Playlist Configuration Model"
 const playlistSchema = new mongoose.Schema({
   playlist_id: {
     type: String,
@@ -10,32 +24,41 @@ const playlistSchema = new mongoose.Schema({
     unique: true,
   },
   user_id: {
-    type: String,
-    required: true, // Link playlist to a user
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   },
   name: {
     type: String,
     default: 'Untitled Playlist'
   },
-  // The ordered list of assets to be played
-  display_sequence: [mediaAssetSchema], 
-  
-  schedule: {
-    startTime: String, // e.g., "08:00"
-    endTime: String,   // e.g., "11:00"
-    type: { 
-      type: String, 
-      enum: ['breakfast', 'lunch', 'dinner', 'all_day', 'custom'],
-      default: 'all_day'
-    }
+  priority: {
+    type: Number,
+    default: 1, // Higher number = higher priority
   },
+  tags: [String],
+  is_active: {
+    type: Boolean,
+    default: true,
+  },
+  // The ordered list of assets to be played
+  assets: [playlistItemSchema], 
+  
+  // Multiple schedules
+  schedules: [scheduleSchema],
+
+  // Assigned Devices (Screen assignment)
+  assigned_devices: [{
+    type: String, // device_token
+    ref: 'Device'
+  }],
 
   last_updated: {
     type: Date,
     default: Date.now,
   }
 }, {
-  timestamps: true // Adds createdAt and updatedAt automatically
+  timestamps: true
 });
 
 const Playlist = mongoose.model('Playlist', playlistSchema);

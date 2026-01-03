@@ -97,11 +97,6 @@ export const pairDevice = async (req, res) => {
 // @route   GET /v1/player/config
 // @access  Public (Device)
 export const getConfig = async (req, res) => {
-  // device_token is passed as a query parameter or header. 
-  // Spec says "Request Parameters: device_token". Usually query or path.
-  // Let's assume query param ?device_token=... or header.
-  // Spec says "Input: device_token".
-  
   const { device_token } = req.query; 
 
   if (!device_token) {
@@ -123,22 +118,90 @@ export const getConfig = async (req, res) => {
       }
     }
 
-    if (!device.playlist_id) {
-      return res.status(200).json({ playlist_json: { display_sequence: [] }, message: 'No playlist assigned' });
+    // Advanced Playlist Resolution Logic
+    const now = new Date();
+    const currentDay = now.getDay(); // 0-6
+    const currentTime = now.getHours() * 60 + now.getMinutes(); // Minutes from midnight
+
+    // Find all active playlists assigned to this device
+    const playlists = await Playlist.find({
+      assigned_devices: device_token,
+      is_active: true
+    });
+
+    let selectedPlaylist = null;
+    let highestPriority = -1;
+
+    for (const playlist of playlists) {
+      // Check if any schedule matches
+      let isScheduled = false;
+      
+      // If no schedules defined, assume always active (or handle as never active depending on reqs)
+      // Let's assume if schedules array is empty, it's NOT scheduled unless we want a default.
+      // But usually "all day" is a schedule.
+      if (!playlist.schedules || playlist.schedules.length === 0) {
+        // Fallback: if no schedule, maybe it's a manual override or default?
+        // Let's treat it as low priority default if we want.
+        // For now, strict scheduling: must have a matching schedule.
+        continue;
+      }
+
+      for (const schedule of playlist.schedules) {
+        // Check Date Range
+        if (schedule.startDate && new Date(schedule.startDate) > now) continue;
+        if (schedule.endDate && new Date(schedule.endDate) < now) continue;
+
+        // Check Day of Week
+        if (schedule.daysOfWeek && schedule.daysOfWeek.length > 0 && !schedule.daysOfWeek.includes(currentDay)) continue;
+
+        // Check Time Range
+        const [startH, startM] = schedule.startTime.split(':').map(Number);
+        const [endH, endM] = schedule.endTime.split(':').map(Number);
+        const startMinutes = startH * 60 + startM;
+        const endMinutes = endH * 60 + endM;
+
+        if (currentTime >= startMinutes && currentTime <= endMinutes) {
+          isScheduled = true;
+          break; // Found a valid schedule for this playlist
+        }
+      }
+
+      if (isScheduled) {
+        if (playlist.priority > highestPriority) {
+          highestPriority = playlist.priority;
+          selectedPlaylist = playlist;
+        }
+      }
     }
 
-    const playlist = await Playlist.findOne({ playlist_id: device.playlist_id });
-
-    if (!playlist) {
-      return res.status(404).json({ message: 'Playlist not found' });
+    if (!selectedPlaylist) {
+      // Fallback to the manually assigned one if no scheduled one is found?
+      // Or just return empty.
+      // Let's check the legacy `playlist_id` field as a fallback default
+      if (device.playlist_id) {
+        const fallbackPlaylist = await Playlist.findOne({ playlist_id: device.playlist_id });
+        if (fallbackPlaylist) {
+           // Return the legacy format or new format?
+           // Let's return the new format.
+           selectedPlaylist = fallbackPlaylist;
+        }
+      }
     }
+
+    if (!selectedPlaylist) {
+      return res.status(200).json({ playlist_json: { display_sequence: [] }, message: 'No active playlist found' });
+    }
+
+    // Sort assets by order
+    const sortedAssets = selectedPlaylist.assets.sort((a, b) => a.order - b.order);
 
     // Return the Playlist Configuration Model
     res.status(200).json({
       playlist_json: {
-        playlist_id: playlist.playlist_id,
-        display_sequence: playlist.display_sequence,
-        last_updated: playlist.last_updated
+        playlist_id: selectedPlaylist.playlist_id,
+        display_sequence: sortedAssets, // This matches the structure expected by the player
+        last_updated: selectedPlaylist.last_updated,
+        name: selectedPlaylist.name
       }
     });
   } catch (error) {

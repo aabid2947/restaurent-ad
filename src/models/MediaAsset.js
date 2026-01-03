@@ -6,7 +6,12 @@ const mediaAssetSchema = new mongoose.Schema({
   asset_id: {
     type: String,
     required: true,
-    // unique: true // Not strictly unique globally if reused, but usually unique per upload
+    unique: true
+  },
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
   file_url: {
     type: String,
@@ -17,26 +22,18 @@ const mediaAssetSchema = new mongoose.Schema({
     enum: ['video', 'image'],
     required: true,
   },
-  playback_duration: {
+  duration: {
     type: Number,
-    required: true, // Duration in seconds
+    default: 10, // Default duration in seconds
   },
-  checksum: {
-    type: String,
-    // required: true, // Optional for now, can be added if we implement checksum calculation
-  },
-  original_filename: String, // Helper for admin UI
-  priority: {
-    type: Number,
-    default: 1, // Default priority 1. Higher number = higher priority/frequency
-  },
+  original_filename: String,
+  tags: [String],
   uploaded_at: {
     type: Date,
     default: Date.now,
   }
 });
 
-// We can export the schema to be used in Playlist, or the model if we want to store all assets independently
 const MediaAsset = mongoose.model('MediaAsset', mediaAssetSchema);
 
 export { mediaAssetSchema, MediaAsset };

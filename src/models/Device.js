@@ -15,6 +15,10 @@ const deviceSchema = new mongoose.Schema({
     // Actually, pairing assigns a user. So it might be null if we pre-create devices, 
     // but in this flow, device is created on pairing.
   },
+  name: {
+    type: String,
+    default: 'New Device'
+  },
   pairing_code: {
     type: String,
     required: true,

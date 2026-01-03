@@ -77,7 +77,7 @@ export const generateUploadSignature = async (req, res) => {
 // @route   POST /v1/admin/save-media
 // @access  Private (Admin/User)
 export const saveMediaMetadata = async (req, res) => {
-  const { user_id, file_url, public_id, resource_type, duration, original_filename, priority } = req.body;
+  const { user_id, file_url, public_id, resource_type, duration, original_filename, tags } = req.body;
 
   try {
     // Verify user exists
@@ -88,13 +88,12 @@ export const saveMediaMetadata = async (req, res) => {
 
     const asset = new MediaAsset({
       asset_id: uuidv4(),
+      user_id: user._id,
       file_url: file_url,
       type: resource_type, // 'image' or 'video'
-      playback_duration: duration || (resource_type === 'video' ? 0 : 10), // Default 10s for images if not provided
+      duration: duration || (resource_type === 'video' ? 0 : 10), // Default 10s for images if not provided
       original_filename: original_filename,
-      priority: priority || 1,
-      // We can store public_id if we want to delete it later from Cloudinary
-      // public_id: public_id 
+      tags: tags || []
     });
 
     // Persist metadata
@@ -102,14 +101,7 @@ export const saveMediaMetadata = async (req, res) => {
 
     res.status(200).json({
       message: 'Media metadata saved successfully',
-      asset: {
-        asset_id: asset.asset_id,
-        file_url: asset.file_url,
-        type: asset.type,
-        playback_duration: asset.playback_duration,
-        original_filename: asset.original_filename,
-        priority: asset.priority
-      }
+      asset
     });
 
   } catch (error) {
@@ -149,7 +141,7 @@ export const getSyncStatus = async (req, res) => {
 // @route   POST /v1/admin/playlist
 // @access  Private (Admin/User)
 export const createPlaylist = async (req, res) => {
-  const { user_id, name, assets, schedule } = req.body; // assets is array of MediaAsset objects
+  const { user_id, name, assets, schedules, priority, tags, is_active, assigned_devices } = req.body; 
 
   try {
     // Verify user exists
@@ -160,12 +152,19 @@ export const createPlaylist = async (req, res) => {
 
     const playlist_id = uuidv4();
     
+    // assets should be an array of { asset_id, order, duration, type }
+    // schedules should be an array of { startTime, endTime, daysOfWeek, startDate, endDate }
+
     const playlist = await Playlist.create({
       playlist_id,
-      user_id,
+      user_id: user._id,
       name,
-      display_sequence: assets, // Expects array of objects matching mediaAssetSchema
-      schedule: schedule || { type: 'all_day', startTime: '00:00', endTime: '23:59' }, // Default schedule
+      assets: assets || [], 
+      schedules: schedules || [],
+      priority: priority || 1,
+      tags: tags || [],
+      is_active: is_active !== undefined ? is_active : true,
+      assigned_devices: assigned_devices || [],
       last_updated: Date.now()
     });
 
@@ -175,7 +174,7 @@ export const createPlaylist = async (req, res) => {
   }
 };
 
-// @desc    Assign playlist to device
+// @desc    Assign playlist to device (Legacy/Simple mode)
 // @route   POST /v1/admin/assign-playlist
 // @access  Private (Admin/User)
 export const assignPlaylist = async (req, res) => {
@@ -199,8 +198,14 @@ export const assignPlaylist = async (req, res) => {
     const playlist = await Playlist.findOne({ playlist_id });
     if (!playlist) return res.status(404).json({ message: 'Playlist not found' });
 
+    // Add device to playlist's assigned_devices if not already there
+    if (!playlist.assigned_devices.includes(device_token)) {
+      playlist.assigned_devices.push(device_token);
+      await playlist.save();
+    }
+
+    // Also update device for backward compatibility or quick reference
     device.playlist_id = playlist_id;
-    // Reset download status as new playlist is assigned
     device.download_status = 'in_progress'; 
     await device.save();
 
@@ -243,6 +248,41 @@ export const getPlaylists = async (req, res) => {
 
     const playlists = await Playlist.find({ user_id });
     res.status(200).json(playlists);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Update a Playlist (Add/Remove/Reorder assets, Update Schedule)
+// @route   PUT /v1/admin/playlist/:playlist_id
+// @access  Private (Admin/User)
+export const updatePlaylist = async (req, res) => {
+  const { playlist_id } = req.params;
+  const { user_id, name, assets, schedules, priority, tags, is_active, assigned_devices } = req.body;
+
+  try {
+    const user = await User.findById(user_id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const playlist = await Playlist.findOne({ playlist_id });
+    if (!playlist) return res.status(404).json({ message: 'Playlist not found' });
+
+    if (playlist.user_id.toString() !== user._id.toString()) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+
+    if (name) playlist.name = name;
+    if (assets) playlist.assets = assets;
+    if (schedules) playlist.schedules = schedules;
+    if (priority) playlist.priority = priority;
+    if (tags) playlist.tags = tags;
+    if (is_active !== undefined) playlist.is_active = is_active;
+    if (assigned_devices) playlist.assigned_devices = assigned_devices;
+    
+    playlist.last_updated = Date.now();
+
+    await playlist.save();
+    res.status(200).json(playlist);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
