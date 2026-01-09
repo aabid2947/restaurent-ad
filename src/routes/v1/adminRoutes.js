@@ -9,7 +9,9 @@ import {
   assignPlaylist,
   getDevices,
   getPlaylists,
-  getUserMediaLinks
+  getUserMediaLinks,
+  handleDevicePlaylist,
+  setDeviceName
 } from '../../controllers/adminController.js';
 import { MediaAsset } from '../../models/MediaAsset.js';
 
@@ -29,10 +31,12 @@ router.post('/save-media', saveMediaMetadata);
 //   // const links = allMedia.map(media => media.url);
 //   res.json({ allMedia });
 // });
+router.put('/device-name', setDeviceName);
 router.get('/save-user-media-links',getUserMediaLinks);
 router.get('/sync-status', getSyncStatus);
 router.post('/playlist', createPlaylist);
 router.put('/playlist/:playlist_id', updatePlaylist);
+router.put('/device-playlist', handleDevicePlaylist);
 router.post('/assign-playlist', assignPlaylist);
 router.get('/devices', getDevices);
 router.get('/playlists', getPlaylists);

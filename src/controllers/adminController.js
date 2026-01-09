@@ -141,7 +141,7 @@ export const getSyncStatus = async (req, res) => {
 // @route   POST /v1/admin/playlist
 // @access  Private (Admin/User)
 export const createPlaylist = async (req, res) => {
-  const { user_id, name, assets, schedules, priority, tags, is_active, assigned_devices } = req.body; 
+  const { user_id, name, assets, schedules, priority, tags, is_active, assigned_devices } = req.body;
 
   try {
     // Verify user exists
@@ -151,7 +151,7 @@ export const createPlaylist = async (req, res) => {
     }
 
     const playlist_id = uuidv4();
-    
+
     // assets should be an array of { asset_id, order, duration, type }
     // schedules should be an array of { startTime, endTime, daysOfWeek, startDate, endDate }
 
@@ -159,7 +159,7 @@ export const createPlaylist = async (req, res) => {
       playlist_id,
       user_id: user._id,
       name,
-      assets: assets || [], 
+      assets: assets || [],
       schedules: schedules || [],
       priority: priority || 1,
       tags: tags || [],
@@ -206,7 +206,7 @@ export const assignPlaylist = async (req, res) => {
 
     // Also update device for backward compatibility or quick reference
     device.playlist_id = playlist_id;
-    device.download_status = 'in_progress'; 
+    device.download_status = 'in_progress';
     await device.save();
 
     res.status(200).json({ message: 'Playlist assigned successfully', device });
@@ -248,7 +248,7 @@ export const getUserMediaLinks = async (req, res) => {
   }
   catch (error) {
     res.status(500).json({ message: error.message });
-  } 
+  }
 };
 
 // @desc    Get all playlists for a user
@@ -295,7 +295,7 @@ export const updatePlaylist = async (req, res) => {
     if (tags) playlist.tags = tags;
     if (is_active !== undefined) playlist.is_active = is_active;
     if (assigned_devices) playlist.assigned_devices = assigned_devices;
-    
+
     playlist.last_updated = Date.now();
 
     await playlist.save();
@@ -304,3 +304,73 @@ export const updatePlaylist = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+// @desc handle device playlist, add new playlist , remove existing playlist
+// @route POST /v1/admin/device-playlist
+// @access Private (Admin/User)
+export const handleDevicePlaylist = async (req, res) => {
+  try {
+    const { device_token, playlist_id, action, user_id } = req.body;
+
+    // Verify user exists
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const device = await Device.findOne({ device_token });
+    if (!device) return res.status(404).json({ message: 'Device not found' });
+
+    // check ownership
+    if (device.user_id !== user_id) {
+      return res.status(403).json({ message: 'Not authorized to manage this device' });
+    }
+
+    // check playlist existence
+    const playlist = await Playlist.findOne({ playlist_id });
+    if (!playlist) return res.status(404).json({ message: 'Playlist not found' });
+
+    if (action === 'add') {
+      // add playlist to device
+      if (!playlist.assigned_devices.includes(device_token)) {
+        playlist.assigned_devices.push(device_token);
+        await playlist.save();
+      }
+    }
+    else if (action === 'remove') {
+      // remove playlist from device
+      playlist.assigned_devices = playlist.assigned_devices.filter(token => token !== device_token);
+      await playlist.save();
+    }
+    res.status(200).json({ message: `Playlist ${action}ed successfully`, device });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+// @desc set a name for a device
+// @route PUT /v1/admin/device-name
+// @access Private (Admin/User)
+export const setDeviceName = async (req, res) => {
+  try {
+    const { device_token, device_name, user_id } = req.body;
+
+    // Verify user exists
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const device = await Device.findOne({ device_token });
+    if (!device) return res.status(404).json({ message: 'Device not found' });
+    // check ownership
+    if (device.user_id !== user_id) {
+      return res.status(403).json({ message: 'Not authorized to manage this device' });
+    }
+    device.device_name = device_name;
+    await device.save();
+    res.status(200).json({ message: 'Device name updated successfully', device });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
