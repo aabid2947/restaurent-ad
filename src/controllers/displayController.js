@@ -1,3 +1,4 @@
+import { MediaAsset } from '../models/MediaAsset.js'; //
 import Device from '../models/Device.js';
 import Playlist from '../models/Playlist.js';
 import User from '../models/User.js';
@@ -96,6 +97,7 @@ export const pairDevice = async (req, res) => {
 // @desc    Get configuration (playlist) for the device
 // @route   GET /v1/player/config
 // @access  Public (Device)
+
 export const getConfig = async (req, res) => {
   const { device_token } = req.query; 
 
@@ -110,7 +112,7 @@ export const getConfig = async (req, res) => {
       return res.status(404).json({ message: 'Device not found' });
     }
 
-    // Optional: Verify user existence for active playback
+    // Verify user existence for active playback
     if (device.user_id) {
       const user = await User.findById(device.user_id);
       if (!user) {
@@ -118,7 +120,7 @@ export const getConfig = async (req, res) => {
       }
     }
 
-    // Advanced Playlist Resolution Logic
+    // --- Advanced Playlist Resolution Logic ---
     const now = new Date();
     const currentDay = now.getDay(); // 0-6
     const currentTime = now.getHours() * 60 + now.getMinutes(); // Minutes from midnight
@@ -133,16 +135,10 @@ export const getConfig = async (req, res) => {
     let highestPriority = -1;
 
     for (const playlist of playlists) {
-      // Check if any schedule matches
       let isScheduled = false;
       
-      // If no schedules defined, assume always active (or handle as never active depending on reqs)
-      // Let's assume if schedules array is empty, it's NOT scheduled unless we want a default.
-      // But usually "all day" is a schedule.
+      // Strict scheduling: must have a matching schedule defined
       if (!playlist.schedules || playlist.schedules.length === 0) {
-        // Fallback: if no schedule, maybe it's a manual override or default?
-        // Let's treat it as low priority default if we want.
-        // For now, strict scheduling: must have a matching schedule.
         continue;
       }
 
@@ -162,7 +158,7 @@ export const getConfig = async (req, res) => {
 
         if (currentTime >= startMinutes && currentTime <= endMinutes) {
           isScheduled = true;
-          break; // Found a valid schedule for this playlist
+          break; 
         }
       }
 
@@ -174,32 +170,53 @@ export const getConfig = async (req, res) => {
       }
     }
 
-    if (!selectedPlaylist) {
-      // Fallback to the manually assigned one if no scheduled one is found?
-      // Or just return empty.
-      // Let's check the legacy `playlist_id` field as a fallback default
-      if (device.playlist_id) {
-        const fallbackPlaylist = await Playlist.findOne({ playlist_id: device.playlist_id });
-        if (fallbackPlaylist) {
-           // Return the legacy format or new format?
-           // Let's return the new format.
-           selectedPlaylist = fallbackPlaylist;
-        }
-      }
+    // Fallback to the legacy manually assigned playlist if no scheduled one is found
+    if (!selectedPlaylist && device.playlist_id) {
+      selectedPlaylist = await Playlist.findOne({ playlist_id: device.playlist_id });
     }
 
     if (!selectedPlaylist) {
-      return res.status(200).json({ playlist_json: { display_sequence: [] }, message: 'No active playlist found' });
+      return res.status(200).json({ 
+        playlist_json: { display_sequence: [] }, 
+        message: 'No active playlist found' 
+      });
     }
 
-    // Sort assets by order
-    const sortedAssets = selectedPlaylist.assets.sort((a, b) => a.order - b.order);
+    // --- Asset Metadata Fetching & Merging ---
 
-    // Return the Playlist Configuration Model
+    // 1. Sort assets by the defined order
+    const sortedAssetItems = selectedPlaylist.assets.sort((a, b) => a.order - b.order);
+
+    // 2. Extract asset_ids for bulk lookup
+    const assetIds = sortedAssetItems.map(item => item.asset_id);
+
+    // 3. Fetch full details from MediaAsset collection using the IDs
+    const mediaDetails = await MediaAsset.find({ 
+      asset_id: { $in: assetIds } 
+    });
+
+    // 4. Enrich the sequence with file URLs and metadata
+    const enrichedSequence = sortedAssetItems.map(item => {
+      // Find matching metadata from the MediaAsset query
+      const detail = mediaDetails.find(m => m.asset_id === item.asset_id);
+      
+      return {
+        asset_id: item.asset_id,
+        order: item.order,
+        // Prioritize playlist override, then asset metadata, then defaults
+        type: item.type || detail?.type, 
+        duration: item.duration || detail?.duration || 10, 
+        file_url: detail ? detail.file_url : null, 
+        original_filename: detail?.original_filename,
+        _id: item._id
+      };
+    });
+
+    // Final Configuration response
     res.status(200).json({
       playlist_json: {
         playlist_id: selectedPlaylist.playlist_id,
-        display_sequence: sortedAssets, // This matches the structure expected by the player
+        display_sequence: enrichedSequence, 
         last_updated: selectedPlaylist.last_updated,
         name: selectedPlaylist.name
       }
