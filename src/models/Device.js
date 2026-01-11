@@ -25,7 +25,7 @@ const deviceSchema = new mongoose.Schema({
     unique: true, // The 6-digit code
   },
   playlist_id: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId, // Change from String
     ref: 'Playlist', // Reference to the Playlist model (optional, but good for population)
     default: null,
   },

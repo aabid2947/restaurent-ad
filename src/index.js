@@ -5,7 +5,7 @@ import connectDB from './config/db.js';
 import displayRoutes from './routes/v1/displayRoutes.js';
 import adminRoutes from './routes/v1/adminRoutes.js';
 import userRoutes from './routes/v1/userRoutes.js';
-
+// import { deleteAllCloudinaryFiles } from './utils/deleteAllCloudinaryFiles.js';
 dotenv.config();
 
 // Connect to MongoDB
@@ -34,6 +34,13 @@ app.use('/v1/admin', adminRoutes);
 // Mounted at /v1/users
 app.use('/v1/users', userRoutes);
 
+// do not use this route in production
+// app.delete('/destructive/admin/delete-all-cloudinary-files', async (req, res) => {
+//   await deleteAllCloudinaryFiles();
+//   res.json({ message: 'Initiated deletion of all Cloudinary files and cleared database collections.' });
+// });
+//  curl command for testing
+// curl -X DELETE http://localhost:5000/destructive/admin/delete-all-cloudinary-files
 // Root route
 app.get('/', (req, res) => {
   res.send('Advertisement Backend API is running');

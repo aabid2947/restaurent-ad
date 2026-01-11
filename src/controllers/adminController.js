@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 // @desc    Claim a device using pairing code
 // @route   POST /v1/admin/claim-device
 // @access  Private (Admin/User)
+// curl -X POST http://localhost:5000/v1/admin/claim-device -H "Content-Type: application/json" -d '{"pairing_code":"268314","user_id":"YYYY"}'
 export const claimDevice = async (req, res) => {
   const { pairing_code, user_id } = req.body;
 
@@ -227,7 +228,7 @@ export const getDevices = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const devices = await Device.find({ user_id });
+    const devices = await Device.find({ user_id }).populate('playlist_id'); // Add populate
     res.status(200).json(devices);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -336,12 +337,15 @@ export const handleDevicePlaylist = async (req, res) => {
         playlist.assigned_devices.push(device_token);
         await playlist.save();
       }
+      device.playlist_id = playlist._id; // Sync back to device
     }
     else if (action === 'remove') {
       // remove playlist from device
       playlist.assigned_devices = playlist.assigned_devices.filter(token => token !== device_token);
       await playlist.save();
+      device.playlist_id = null; // Remove from device
     }
+    await device.save();
     res.status(200).json({ message: `Playlist ${action}ed successfully`, device });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -374,3 +378,26 @@ export const setDeviceName = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 }
+
+// @desc    Delete a Playlist
+// @route   DELETE /v1/admin/playlist/:playlist_id
+// @access  Private (Admin/User)
+
+export const deletePlaylist = async (req, res) => {
+  const { playlist_id } = req.params;
+  const { user_id } = req.query; // Pass user_id to ensure ownership
+
+  try {
+    const playlist = await Playlist.findOne({ playlist_id });
+    if (!playlist) return res.status(404).json({ message: 'Playlist not found' });
+
+    if (playlist.user_id.toString() !== user_id) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+
+    await Playlist.deleteOne({ playlist_id });
+    res.status(200).json({ message: 'Playlist deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

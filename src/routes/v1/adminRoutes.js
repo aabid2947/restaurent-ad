@@ -11,7 +11,8 @@ import {
   getPlaylists,
   getUserMediaLinks,
   handleDevicePlaylist,
-  setDeviceName
+  setDeviceName,
+  deletePlaylist
 } from '../../controllers/adminController.js';
 import { MediaAsset } from '../../models/MediaAsset.js';
 
@@ -19,6 +20,7 @@ const router = express.Router();
 
 // Admin endpoints
 router.post('/claim-device', claimDevice);
+  // curl -X POST http://localhost:5000/v1/admin/claim-device -H "Content-Type: application/json" -d '{"pairing_code":"114907","user_id":"69612f69b6d7fb3111302cb6"}'
 router.post('/upload-signature', generateUploadSignature);
 router.post('/save-media', saveMediaMetadata);
 // see links to all save media
@@ -40,5 +42,6 @@ router.put('/device-playlist', handleDevicePlaylist);
 router.post('/assign-playlist', assignPlaylist);
 router.get('/devices', getDevices);
 router.get('/playlists', getPlaylists);
+router.delete('/playlist/:playlist_id', deletePlaylist);
 
 export default router;
