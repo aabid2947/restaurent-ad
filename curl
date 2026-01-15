@@ -1,0 +1,2 @@
+
+curl -X POST 'http://localhost:5000/v1/admin/assign-playlist' -H 'Content-Type: application/json' -d '{  "device_token": "9f0e03d6-eef7-48b8-bfc2-0bc1cdd3b2f3", "playlist_id": "b96c92d7-64f6-4a09-b558-11fa83426aeb",  "user_id": "69612f69b6d7fb3111302cb6"}' 
