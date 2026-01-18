@@ -1,46 +1,176 @@
 {
   "users": [
     {
-      "_id": "696ce449cd58e3876f27e2fb",
-      "name": "Tesy",
+      "_id": "696ce5de225da28312acccd5",
+      "name": "Ttt",
       "email": "aabidhussainpas@gmail.com",
-      "password": "$2a$10$T2FKXnDbqoMbWiE5S3uZE.MLoCEkJtrQdb9niyszwS4HInGdeX00u",
+      "password": "$2a$10$HexsBHTeMZe5rK.BLhL/x.qqVWDRjme8ZEzwkIKlSr0UgYZuo4KBu",
       "isAdmin": true,
-      "createdAt": "2026-01-18T13:46:49.061Z",
-      "updatedAt": "2026-01-18T13:46:49.061Z",
+      "createdAt": "2026-01-18T13:53:34.336Z",
+      "updatedAt": "2026-01-18T13:53:34.336Z",
       "__v": 0
     }
   ],
-  "mediaassets": [],
-  "playlists": [],
-  "devices": [
+  "mediaassets": [
     {
-      "_id": "696ce44dcd58e3876f27e2fe",
-      "pairing_code": "834828",
-      "playlist_id": null,
-      "app_version": "1.0.0",
-      "status": "paired",
-      "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T13:46:53.585Z",
-      "createdAt": "2026-01-18T13:46:53.585Z",
-      "updatedAt": "2026-01-18T13:47:04.039Z",
-      "__v": 0,
-      "user_id": "696ce449cd58e3876f27e2fb",
-      "device_token": "c593af22-4d2a-43ce-a413-ac1b5683c9d7"
+      "_id": "696ce5fca482f236d3de4059",
+      "asset_id": "cec448b8-d6b4-4bdf-ad5a-6b368268b0ad",
+      "user_id": "696ce5de225da28312acccd5",
+      "file_url": "https://res.cloudinary.com/dscnmbhnf/image/upload/v1768744443/advertisement/696ce5de225da28312acccd5/lwdxkrruofl1ku1qdvsg.jpg",
+      "type": "image",
+      "duration": 10,
+      "original_filename": "1000045490.jpg",
+      "tags": [],
+      "uploaded_at": "2026-01-18T13:54:04.759Z",
+      "__v": 0
     },
     {
-      "_id": "696ce462cd58e3876f27e30c",
-      "name": "New Device",
-      "pairing_code": "551175",
+      "_id": "696ce600a482f236d3de405d",
+      "asset_id": "faa2c97a-fbb0-4c27-9892-217b2507884d",
+      "user_id": "696ce5de225da28312acccd5",
+      "file_url": "https://res.cloudinary.com/dscnmbhnf/image/upload/v1768744447/advertisement/696ce5de225da28312acccd5/ioeusw99f4v55y8ij6wd.jpg",
+      "type": "image",
+      "duration": 10,
+      "original_filename": "1000045323.jpg",
+      "tags": [],
+      "uploaded_at": "2026-01-18T13:54:08.580Z",
+      "__v": 0
+    },
+    {
+      "_id": "696ce608a482f236d3de4061",
+      "asset_id": "bc947877-5ca4-425a-a1f8-674255830385",
+      "user_id": "696ce5de225da28312acccd5",
+      "file_url": "https://res.cloudinary.com/dscnmbhnf/image/upload/v1768744455/advertisement/696ce5de225da28312acccd5/uiwjqe6sgrtc3mgxuwlc.jpg",
+      "type": "image",
+      "duration": 10,
+      "original_filename": "1000045236.jpg",
+      "tags": [],
+      "uploaded_at": "2026-01-18T13:54:16.309Z",
+      "__v": 0
+    },
+    {
+      "_id": "696ce65b225da28312acccee",
+      "asset_id": "40b1d3b4-2c6f-4390-81d2-658ad00d6c60",
+      "user_id": "696ce5de225da28312acccd5",
+      "file_url": "https://res.cloudinary.com/dscnmbhnf/video/upload/v1768744537/advertisement/696ce5de225da28312acccd5/zzwqqg4lti9npd1hrmfd.mp4",
+      "type": "video",
+      "duration": 32.149333,
+      "original_filename": "1000044422.mp4",
+      "tags": [],
+      "uploaded_at": "2026-01-18T13:55:39.408Z",
+      "__v": 0
+    }
+  ],
+  "playlists": [
+    {
+      "_id": "696ce60ca482f236d3de4066",
+      "playlist_id": "108aa877-452c-4cc5-a4e3-4346b3b7999e",
+      "user_id": "696ce5de225da28312acccd5",
+      "name": "Hello",
+      "priority": 1,
+      "tags": [],
+      "is_active": true,
+      "assets": [
+        {
+          "asset_id": "cec448b8-d6b4-4bdf-ad5a-6b368268b0ad",
+          "order": 1,
+          "duration": 10,
+          "type": "image",
+          "_id": "696ce60ca482f236d3de4067"
+        },
+        {
+          "asset_id": "faa2c97a-fbb0-4c27-9892-217b2507884d",
+          "order": 2,
+          "duration": 10,
+          "type": "image",
+          "_id": "696ce60ca482f236d3de4068"
+        },
+        {
+          "asset_id": "faa2c97a-fbb0-4c27-9892-217b2507884d",
+          "order": 3,
+          "duration": 10,
+          "type": "image",
+          "_id": "696ce60ca482f236d3de4069"
+        },
+        {
+          "asset_id": "bc947877-5ca4-425a-a1f8-674255830385",
+          "order": 4,
+          "duration": 10,
+          "type": "image",
+          "_id": "696ce60ca482f236d3de406a"
+        }
+      ],
+      "schedules": [],
+      "assigned_devices": [
+        "f955631e-a46f-4ce0-9d35-09b98171622c"
+      ],
+      "last_updated": "2026-01-18T13:54:20.042Z",
+      "createdAt": "2026-01-18T13:54:20.047Z",
+      "updatedAt": "2026-01-18T13:54:28.628Z",
+      "__v": 1
+    },
+    {
+      "_id": "696ce666225da28312acccf1",
+      "playlist_id": "f029f397-d59b-4c50-a20a-56aa0325dabe",
+      "user_id": "696ce5de225da28312acccd5",
+      "name": "Tesy",
+      "priority": 1,
+      "tags": [],
+      "is_active": true,
+      "assets": [
+        {
+          "asset_id": "cec448b8-d6b4-4bdf-ad5a-6b368268b0ad",
+          "order": 1,
+          "duration": 10,
+          "type": "image",
+          "_id": "696ce666225da28312acccf2"
+        },
+        {
+          "asset_id": "40b1d3b4-2c6f-4390-81d2-658ad00d6c60",
+          "order": 2,
+          "duration": 10,
+          "type": "video",
+          "_id": "696ce666225da28312acccf3"
+        }
+      ],
+      "schedules": [],
+      "assigned_devices": [],
+      "last_updated": "2026-01-18T13:55:50.269Z",
+      "createdAt": "2026-01-18T13:55:50.273Z",
+      "updatedAt": "2026-01-18T13:55:50.273Z",
+      "__v": 0
+    }
+  ],
+  "devices": [
+    {
+      "_id": "696ce5d6a482f236d3de4053",
+      "pairing_code": "825272",
+      "playlist_id": "108aa877-452c-4cc5-a4e3-4346b3b7999e",
+      "app_version": "1.0.0",
+      "status": "playing",
+      "download_status": "in_progress",
+      "last_heartbeat": "2026-01-18T13:54:18.034Z",
+      "createdAt": "2026-01-18T13:53:26.437Z",
+      "updatedAt": "2026-01-18T13:54:28.829Z",
+      "__v": 0,
+      "device_token": "f955631e-a46f-4ce0-9d35-09b98171622c",
+      "user_id": "696ce5de225da28312acccd5",
+      "name": "New Device"
+    },
+    {
+      "_id": "696ce66c225da28312acccf6",
+      "pairing_code": "457583",
       "playlist_id": null,
       "app_version": "1.0.0",
-      "status": "unpaired",
+      "status": "playing",
       "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T13:47:14.712Z",
-      "createdAt": "2026-01-18T13:47:14.713Z",
-      "updatedAt": "2026-01-18T13:47:20.685Z",
+      "last_heartbeat": "2026-01-18T13:59:07.678Z",
+      "createdAt": "2026-01-18T13:55:56.105Z",
+      "updatedAt": "2026-01-18T13:59:07.678Z",
       "__v": 0,
-      "user_id": null
+      "device_token": "6a2267ce-3aa3-4828-90f8-17f4ee4124ad",
+      "user_id": "696ce5de225da28312acccd5",
+      "name": "New Device"
     }
   ]
 }

@@ -42,6 +42,7 @@ router.put('/playlist/:playlist_id', updatePlaylist);
 router.put('/device-playlist', handleDevicePlaylist);
 router.post('/assign-playlist', assignPlaylist);
 router.get('/devices', getDevices);
+//  curl -X GET http://localhost:5000/v1/admin/devices?user_id=696ce449cd58e3876f27e2fb
 router.get('/playlists', getPlaylists);
 router.delete('/playlist/:playlist_id', deletePlaylist);
 

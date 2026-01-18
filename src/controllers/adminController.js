@@ -242,6 +242,8 @@ export const assignPlaylist = async (req, res) => {
 // @desc    Get all devices for a user
 // @route   GET /v1/admin/devices
 // @access  Private (Admin/User)
+// import Playlist from '../models/playlist.js';
+
 export const getDevices = async (req, res) => {
   const { user_id } = req.query;
 
@@ -251,12 +253,28 @@ export const getDevices = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const devices = await Device.find({ user_id }).populate('playlist_id'); // Add populate
-    res.status(200).json(devices);
+    const devices = await Device.find({ user_id }).lean();
+
+    const playlistUuids = [
+      ...new Set(devices.map(d => d.playlist_id).filter(Boolean))
+    ];
+
+    const playlists = await Playlist.find({ uuid: { $in: playlistUuids } }).lean();
+    const playlistMap = Object.fromEntries(
+      playlists.map(p => [p.uuid, p])
+    );
+
+    const result = devices.map(d => ({
+      ...d,
+      playlist: playlistMap[d.playlist_id] || null
+    }));
+
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // @desc Get user media links
 // @route GET /v1/admin/save-user-media-links
