@@ -14,28 +14,49 @@ export const claimDevice = async (req, res) => {
   const { pairing_code, user_id } = req.body;
 
   try {
-    // Verify user exists
-    const user = await User.findById(user_id);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    const device = await Device.findOne({ pairing_code });
-    console.log(device)
+    const device = await Device.findOne({ pairing_code: pairing_code });
 
     if (!device) {
       return res.status(404).json({ message: 'Invalid pairing code' });
     }
 
+    // Check if the device has been claimed by a user (via Admin Panel)
     if (device.user_id) {
-      return res.status(400).json({ message: 'Device already claimed' });
+      return res.status(202).json({ message: 'Device already claimed' });
     }
 
-    device.user_id = user_id;
-    console.log(device)
-    await device.save();
+    // Verify that the user actually exists (in case of deleted users)
+    const user = await User.findById(user_id);
+    console.log("user", user)
+    if (!user) {
+      // Reset the device if the user no longer exists
+      device.user_id = null;
+      device.status = 'unpaired';
+      await device.save();
+      return res.status(202).json({ message: 'Waiting for user to claim device' });
+    }
 
-    res.status(200).json({ message: 'Device claimed successfully', device });
+    // If already paired and has token, return it
+    if (device.device_token) {
+      return res.status(200).json({
+        device_token: device.device_token,
+        user_id: device.user_id
+      });
+    }
+
+    // Generate permanent device token
+    const device_token = uuidv4();
+
+    device.device_token = device_token;
+    device.user_id = user_id;
+    device.status = 'paired';
+    await device.save();
+    console.log(device)
+
+    res.status(200).json({
+      message: 'Device paired successfully',
+      device: device
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

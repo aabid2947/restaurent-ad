@@ -1,13 +1,13 @@
 {
   "users": [
     {
-      "_id": "696ce064dc2b809d4b43da10",
-      "name": "Qwer",
+      "_id": "696ce449cd58e3876f27e2fb",
+      "name": "Tesy",
       "email": "aabidhussainpas@gmail.com",
-      "password": "$2a$10$FNmWd0Uj8vbln2uqvOD3i.1Bf30/6mQB.XFRIPyEtMG5A4RybyYo2",
+      "password": "$2a$10$T2FKXnDbqoMbWiE5S3uZE.MLoCEkJtrQdb9niyszwS4HInGdeX00u",
       "isAdmin": true,
-      "createdAt": "2026-01-18T13:30:12.755Z",
-      "updatedAt": "2026-01-18T13:30:12.755Z",
+      "createdAt": "2026-01-18T13:46:49.061Z",
+      "updatedAt": "2026-01-18T13:46:49.061Z",
       "__v": 0
     }
   ],
@@ -15,32 +15,32 @@
   "playlists": [],
   "devices": [
     {
-      "_id": "696ce071b44ec6fe79f42a89",
-      "name": "New Device",
-      "pairing_code": "178206",
+      "_id": "696ce44dcd58e3876f27e2fe",
+      "pairing_code": "834828",
       "playlist_id": null,
       "app_version": "1.0.0",
       "status": "paired",
       "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T13:30:25.193Z",
-      "createdAt": "2026-01-18T13:30:25.206Z",
-      "updatedAt": "2026-01-18T13:31:52.563Z",
+      "last_heartbeat": "2026-01-18T13:46:53.585Z",
+      "createdAt": "2026-01-18T13:46:53.585Z",
+      "updatedAt": "2026-01-18T13:47:04.039Z",
       "__v": 0,
-      "device_token": "05046c7f-5596-4350-9ed4-bd1edac44b29"
+      "user_id": "696ce449cd58e3876f27e2fb",
+      "device_token": "c593af22-4d2a-43ce-a413-ac1b5683c9d7"
     },
     {
-      "_id": "696ce0d6bb8b457ad0e34cb5",
+      "_id": "696ce462cd58e3876f27e30c",
       "name": "New Device",
-      "pairing_code": "198093",
+      "pairing_code": "551175",
       "playlist_id": null,
       "app_version": "1.0.0",
-      "status": "paired",
+      "status": "unpaired",
       "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T13:32:06.458Z",
-      "createdAt": "2026-01-18T13:32:06.460Z",
-      "updatedAt": "2026-01-18T13:32:26.173Z",
+      "last_heartbeat": "2026-01-18T13:47:14.712Z",
+      "createdAt": "2026-01-18T13:47:14.713Z",
+      "updatedAt": "2026-01-18T13:47:20.685Z",
       "__v": 0,
-      "device_token": "5e1a84b3-0331-4783-a536-5beedbe7c64e"
+      "user_id": null
     }
   ]
 }
