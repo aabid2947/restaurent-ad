@@ -46,22 +46,24 @@ export const generateCode = async (req, res) => {
 // @route   POST /v1/displays/pair
 // @access  Public (Device)
 export const pairDevice = async (req, res) => {
-  const { pairing_code } = req.body;
+  const { code,userId } = req.body;
+  console.log(code,userId);
 
   try {
-    const device = await Device.findOne({ pairing_code });
+    const device = await Device.findOne({ pairing_code:code });
 
     if (!device) {
       return res.status(404).json({ message: 'Invalid pairing code' });
     }
 
     // Check if the device has been claimed by a user (via Admin Panel)
-    if (!device.user_id) {
-      return res.status(202).json({ message: 'Waiting for user to claim device' });
+    if (device.user_id) {
+      return res.status(202).json({ message: 'Device already claimed' });
     }
 
     // Verify that the user actually exists (in case of deleted users)
-    const user = await User.findById(device.user_id);
+    const user = await User.findById(userId);
+    console.log("user",user)
     if (!user) {
       // Reset the device if the user no longer exists
       device.user_id = null;
