@@ -21,6 +21,7 @@ export const claimDevice = async (req, res) => {
     }
 
     const device = await Device.findOne({ pairing_code });
+    console.log(device)
 
     if (!device) {
       return res.status(404).json({ message: 'Invalid pairing code' });
@@ -31,6 +32,7 @@ export const claimDevice = async (req, res) => {
     }
 
     device.user_id = user_id;
+    console.log(device)
     await device.save();
 
     res.status(200).json({ message: 'Device claimed successfully', device });

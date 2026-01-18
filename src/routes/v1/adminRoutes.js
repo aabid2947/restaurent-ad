@@ -20,7 +20,7 @@ const router = express.Router();
 
 // Admin endpoints
 router.post('/claim-device', claimDevice);
-  // curl -X POST http://localhost:5000/v1/admin/claim-device -H "Content-Type: application/json" -d '{"pairing_code":"114907","user_id":"69612f69b6d7fb3111302cb6"}'
+//  curl -X POST http://localhost:5000/v1/admin/claim-device -H "Content-Type: application/json" -d '{"pairing_code":"429227","user_id":"696cc5a2408ba71c209b6359"}'
 router.post('/upload-signature', generateUploadSignature);
 router.post('/save-media', saveMediaMetadata);
 // see links to all save media

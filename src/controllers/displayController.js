@@ -86,8 +86,8 @@ export const pairDevice = async (req, res) => {
     await device.save();
 
     res.status(200).json({
-      device_token,
-      user_id: device.user_id
+      message: 'Device paired successfully',
+      device:device
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

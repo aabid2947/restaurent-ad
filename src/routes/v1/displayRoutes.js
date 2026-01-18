@@ -12,6 +12,7 @@ const router = express.Router();
 // Mounted at /v1
 
 router.get('/displays/generate-code', generateCode); 
+//  curl -X GET http://localhost:5000/v1/displays/generate-code
 router.post('/displays/pair', pairDevice);
 
 router.get('/player/config', getConfig); 
