@@ -83,8 +83,10 @@ export const pairDevice = async (req, res) => {
     const device_token = uuidv4();
 
     device.device_token = device_token;
+    device.user_id = user_id;
     device.status = 'paired';
     await device.save();
+    console.log(device)
 
     res.status(200).json({
       message: 'Device paired successfully',

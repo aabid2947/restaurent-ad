@@ -1,262 +1,46 @@
 {
   "users": [
     {
-      "_id": "696cc5a2408ba71c209b6359",
-      "name": "Joker",
-      "email": "jiker@gmail.com",
-      "password": "$2a$10$Ywm1Mq4NvlbgT1e3Ty/Oi.GK29WTFBFc2yP.64RT3usV6kA2c6QrW",
+      "_id": "696ce064dc2b809d4b43da10",
+      "name": "Qwer",
+      "email": "aabidhussainpas@gmail.com",
+      "password": "$2a$10$FNmWd0Uj8vbln2uqvOD3i.1Bf30/6mQB.XFRIPyEtMG5A4RybyYo2",
       "isAdmin": true,
-      "createdAt": "2026-01-18T11:36:02.941Z",
-      "updatedAt": "2026-01-18T11:36:02.941Z",
+      "createdAt": "2026-01-18T13:30:12.755Z",
+      "updatedAt": "2026-01-18T13:30:12.755Z",
       "__v": 0
     }
   ],
-  "mediaassets": [
-    {
-      "_id": "696cc5b70f40e05a1fee7fb1",
-      "asset_id": "a0e41fc6-b368-4c47-9a5b-e4248be1a951",
-      "user_id": "696cc5a2408ba71c209b6359",
-      "file_url": "https://res.cloudinary.com/dscnmbhnf/image/upload/v1768736181/advertisement/696cc5a2408ba71c209b6359/fx41ibvucm56fee5j0g9.jpg",
-      "type": "image",
-      "duration": 10,
-      "original_filename": "1000127986.jpg",
-      "tags": [],
-      "uploaded_at": "2026-01-18T11:36:23.967Z",
-      "__v": 0
-    }
-  ],
-  "playlists": [
-    {
-      "_id": "696cc5cbdd746e4116701856",
-      "playlist_id": "1c03f3d1-07f0-4c7e-bcc5-1aecfeefe834",
-      "user_id": "696cc5a2408ba71c209b6359",
-      "name": "Test",
-      "priority": 1,
-      "tags": [],
-      "is_active": true,
-      "assets": [
-        {
-          "asset_id": "a0e41fc6-b368-4c47-9a5b-e4248be1a951",
-          "order": 1,
-          "duration": 10,
-          "type": "image",
-          "_id": "696cc5cbdd746e4116701857"
-        }
-      ],
-      "schedules": [],
-      "assigned_devices": [
-        "dc2bb8cd-030c-4321-aa8c-7004da0a10ce"
-      ],
-      "last_updated": "2026-01-18T11:36:43.091Z",
-      "createdAt": "2026-01-18T11:36:43.097Z",
-      "updatedAt": "2026-01-18T11:37:19.110Z",
-      "__v": 1
-    }
-  ],
+  "mediaassets": [],
+  "playlists": [],
   "devices": [
     {
-      "_id": "696cc5d5dd746e411670185f",
-      "name": "Lobby TV",
-      "pairing_code": "880093",
-      "playlist_id": "1c03f3d1-07f0-4c7e-bcc5-1aecfeefe834",
-      "app_version": "1.0.0",
-      "status": "playing",
-      "download_status": "in_progress",
-      "last_heartbeat": "2026-01-18T12:04:31.494Z",
-      "createdAt": "2026-01-18T11:36:53.715Z",
-      "updatedAt": "2026-01-18T12:04:31.495Z",
-      "__v": 0,
-      "user_id": "696cc5a2408ba71c209b6359",
-      "device_token": "dc2bb8cd-030c-4321-aa8c-7004da0a10ce"
-    },
-    {
-      "_id": "696ccc9c11e6feff9db1ca8c",
+      "_id": "696ce071b44ec6fe79f42a89",
       "name": "New Device",
-      "pairing_code": "166070",
+      "pairing_code": "178206",
       "playlist_id": null,
       "app_version": "1.0.0",
       "status": "paired",
       "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T12:05:48.135Z",
-      "createdAt": "2026-01-18T12:05:48.139Z",
-      "updatedAt": "2026-01-18T12:05:59.116Z",
+      "last_heartbeat": "2026-01-18T13:30:25.193Z",
+      "createdAt": "2026-01-18T13:30:25.206Z",
+      "updatedAt": "2026-01-18T13:31:52.563Z",
       "__v": 0,
-      "user_id": "696cc5a2408ba71c209b6359",
-      "device_token": "424579ac-c0f1-4f3d-8963-29cb555781cd"
+      "device_token": "05046c7f-5596-4350-9ed4-bd1edac44b29"
     },
     {
-      "_id": "696cccc811e6feff9db1ca99",
+      "_id": "696ce0d6bb8b457ad0e34cb5",
       "name": "New Device",
-      "pairing_code": "130309",
+      "pairing_code": "198093",
       "playlist_id": null,
       "app_version": "1.0.0",
-      "status": "unpaired",
+      "status": "paired",
       "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T12:06:32.506Z",
-      "createdAt": "2026-01-18T12:06:32.507Z",
-      "updatedAt": "2026-01-18T12:06:32.507Z",
-      "__v": 0
-    },
-    {
-      "_id": "696ccd3daa278c563e8572b3",
-      "name": "New Device",
-      "pairing_code": "381192",
-      "playlist_id": null,
-      "app_version": "1.0.0",
-      "status": "unpaired",
-      "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T12:08:29.300Z",
-      "createdAt": "2026-01-18T12:08:29.306Z",
-      "updatedAt": "2026-01-18T12:09:10.196Z",
+      "last_heartbeat": "2026-01-18T13:32:06.458Z",
+      "createdAt": "2026-01-18T13:32:06.460Z",
+      "updatedAt": "2026-01-18T13:32:26.173Z",
       "__v": 0,
-      "user_id": "696cc5a2408ba71c209b6359"
-    },
-    {
-      "_id": "696cce193581fcc7e8beffe5",
-      "name": "New Device",
-      "pairing_code": "117118",
-      "playlist_id": null,
-      "app_version": "1.0.0",
-      "status": "unpaired",
-      "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T12:12:09.916Z",
-      "createdAt": "2026-01-18T12:12:09.922Z",
-      "updatedAt": "2026-01-18T12:12:28.718Z",
-      "__v": 0,
-      "user_id": "696cc5a2408ba71c209b6359"
-    },
-    {
-      "_id": "696cce5d221c620f5787a996",
-      "name": "New Device",
-      "pairing_code": "429227",
-      "playlist_id": null,
-      "app_version": "1.0.0",
-      "status": "unpaired",
-      "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T12:13:17.815Z",
-      "createdAt": "2026-01-18T12:13:17.820Z",
-      "updatedAt": "2026-01-18T12:13:36.377Z",
-      "__v": 0,
-      "user_id": "696cc5a2408ba71c209b6359"
-    },
-    {
-      "_id": "696cce6e51903f8384042b84",
-      "name": "New Device",
-      "pairing_code": "953037",
-      "playlist_id": null,
-      "app_version": "1.0.0",
-      "status": "unpaired",
-      "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T12:13:34.617Z",
-      "createdAt": "2026-01-18T12:13:34.633Z",
-      "updatedAt": "2026-01-18T12:17:48.090Z",
-      "__v": 0,
-      "user_id": "696cc5a2408ba71c209b6359"
-    },
-    {
-      "_id": "696ccfc2f780124109bab655",
-      "name": "New Device",
-      "pairing_code": "890515",
-      "playlist_id": null,
-      "app_version": "1.0.0",
-      "status": "unpaired",
-      "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T12:19:14.241Z",
-      "createdAt": "2026-01-18T12:19:14.258Z",
-      "updatedAt": "2026-01-18T12:19:14.258Z",
-      "__v": 0
-    },
-    {
-      "_id": "696ccfc8f780124109bab658",
-      "name": "New Device",
-      "pairing_code": "367961",
-      "playlist_id": null,
-      "app_version": "1.0.0",
-      "status": "unpaired",
-      "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T12:19:20.084Z",
-      "createdAt": "2026-01-18T12:19:20.085Z",
-      "updatedAt": "2026-01-18T12:20:04.449Z",
-      "__v": 0,
-      "user_id": "696cc5a2408ba71c209b6359"
-    },
-    {
-      "_id": "696cd82fc763feab168879d6",
-      "name": "New Device",
-      "pairing_code": "946973",
-      "playlist_id": null,
-      "app_version": "1.0.0",
-      "status": "unpaired",
-      "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T12:55:11.424Z",
-      "createdAt": "2026-01-18T12:55:11.428Z",
-      "updatedAt": "2026-01-18T12:55:11.428Z",
-      "__v": 0
-    },
-    {
-      "_id": "696cdc6192875344dd21b0e2",
-      "name": "New Device",
-      "pairing_code": "163501",
-      "playlist_id": null,
-      "app_version": "1.0.0",
-      "status": "unpaired",
-      "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T13:13:05.690Z",
-      "createdAt": "2026-01-18T13:13:05.719Z",
-      "updatedAt": "2026-01-18T13:13:05.719Z",
-      "__v": 0
-    },
-    {
-      "_id": "696cdcd7f8a64881d7398e22",
-      "name": "New Device",
-      "pairing_code": "104837",
-      "playlist_id": null,
-      "app_version": "1.0.0",
-      "status": "unpaired",
-      "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T13:15:03.940Z",
-      "createdAt": "2026-01-18T13:15:03.982Z",
-      "updatedAt": "2026-01-18T13:15:03.982Z",
-      "__v": 0
-    },
-    {
-      "_id": "696cdd2dbc3fd27aaf81c793",
-      "name": "New Device",
-      "pairing_code": "934484",
-      "playlist_id": null,
-      "app_version": "1.0.0",
-      "status": "unpaired",
-      "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T13:16:29.082Z",
-      "createdAt": "2026-01-18T13:16:29.128Z",
-      "updatedAt": "2026-01-18T13:16:29.128Z",
-      "__v": 0
-    },
-    {
-      "_id": "696cdd39bc3fd27aaf81c79b",
-      "name": "New Device",
-      "pairing_code": "718905",
-      "playlist_id": null,
-      "app_version": "1.0.0",
-      "status": "unpaired",
-      "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T13:16:41.528Z",
-      "createdAt": "2026-01-18T13:16:41.533Z",
-      "updatedAt": "2026-01-18T13:16:41.533Z",
-      "__v": 0
-    },
-    {
-      "_id": "696cdd58773402f019c145cb",
-      "name": "New Device",
-      "pairing_code": "165805",
-      "playlist_id": null,
-      "app_version": "1.0.0",
-      "status": "unpaired",
-      "download_status": "unknown",
-      "last_heartbeat": "2026-01-18T13:17:12.407Z",
-      "createdAt": "2026-01-18T13:17:12.431Z",
-      "updatedAt": "2026-01-18T13:17:12.431Z",
-      "__v": 0
+      "device_token": "5e1a84b3-0331-4783-a536-5beedbe7c64e"
     }
   ]
 }
