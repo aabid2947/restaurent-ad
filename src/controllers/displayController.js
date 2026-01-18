@@ -46,11 +46,10 @@ export const generateCode = async (req, res) => {
 // @route   POST /v1/displays/pair
 // @access  Public (Device)
 export const pairDevice = async (req, res) => {
-  const { code,userId } = req.body;
-  console.log(code,userId);
+  const { pairing_code,user_id } = req.body;
 
   try {
-    const device = await Device.findOne({ pairing_code:code });
+    const device = await Device.findOne({ pairing_code:pairing_code });
 
     if (!device) {
       return res.status(404).json({ message: 'Invalid pairing code' });
@@ -62,7 +61,7 @@ export const pairDevice = async (req, res) => {
     }
 
     // Verify that the user actually exists (in case of deleted users)
-    const user = await User.findById(userId);
+    const user = await User.findById(user_id);
     console.log("user",user)
     if (!user) {
       // Reset the device if the user no longer exists
