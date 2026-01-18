@@ -371,7 +371,8 @@ export const setDeviceName = async (req, res) => {
     if (device.user_id !== user_id) {
       return res.status(403).json({ message: 'Not authorized to manage this device' });
     }
-    device.device_name = device_name;
+    device.name = device_name;
+    console.log(device)
     await device.save();
     res.status(200).json({ message: 'Device name updated successfully', device });
   } catch (error) {

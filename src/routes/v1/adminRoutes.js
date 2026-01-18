@@ -34,6 +34,7 @@ router.post('/save-media', saveMediaMetadata);
 //   res.json({ allMedia });
 // });
 router.put('/device-name', setDeviceName);
+//  curl -X PUT http://localhost:5000/v1/admin/device-name -H "Content-Type: application/json" -d '{"device_token":"dc2bb8cd-030c-4321-aa8c-7004da0a10ce","device_name":"Lobby TV","user_id":"696cc5a2408ba71c209b6359"}'
 router.get('/save-user-media-links',getUserMediaLinks);
 router.get('/sync-status', getSyncStatus);
 router.post('/playlist', createPlaylist);

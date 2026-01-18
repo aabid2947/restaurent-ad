@@ -1,0 +1,73 @@
+{
+  "users": [
+    {
+      "_id": "696cc5a2408ba71c209b6359",
+      "name": "Joker",
+      "email": "jiker@gmail.com",
+      "password": "$2a$10$Ywm1Mq4NvlbgT1e3Ty/Oi.GK29WTFBFc2yP.64RT3usV6kA2c6QrW",
+      "isAdmin": true,
+      "createdAt": "2026-01-18T11:36:02.941Z",
+      "updatedAt": "2026-01-18T11:36:02.941Z",
+      "__v": 0
+    }
+  ],
+  "mediaassets": [
+    {
+      "_id": "696cc5b70f40e05a1fee7fb1",
+      "asset_id": "a0e41fc6-b368-4c47-9a5b-e4248be1a951",
+      "user_id": "696cc5a2408ba71c209b6359",
+      "file_url": "https://res.cloudinary.com/dscnmbhnf/image/upload/v1768736181/advertisement/696cc5a2408ba71c209b6359/fx41ibvucm56fee5j0g9.jpg",
+      "type": "image",
+      "duration": 10,
+      "original_filename": "1000127986.jpg",
+      "tags": [],
+      "uploaded_at": "2026-01-18T11:36:23.967Z",
+      "__v": 0
+    }
+  ],
+  "playlists": [
+    {
+      "_id": "696cc5cbdd746e4116701856",
+      "playlist_id": "1c03f3d1-07f0-4c7e-bcc5-1aecfeefe834",
+      "user_id": "696cc5a2408ba71c209b6359",
+      "name": "Test",
+      "priority": 1,
+      "tags": [],
+      "is_active": true,
+      "assets": [
+        {
+          "asset_id": "a0e41fc6-b368-4c47-9a5b-e4248be1a951",
+          "order": 1,
+          "duration": 10,
+          "type": "image",
+          "_id": "696cc5cbdd746e4116701857"
+        }
+      ],
+      "schedules": [],
+      "assigned_devices": [
+        "dc2bb8cd-030c-4321-aa8c-7004da0a10ce"
+      ],
+      "last_updated": "2026-01-18T11:36:43.091Z",
+      "createdAt": "2026-01-18T11:36:43.097Z",
+      "updatedAt": "2026-01-18T11:37:19.110Z",
+      "__v": 1
+    }
+  ],
+  "devices": [
+    {
+      "_id": "696cc5d5dd746e411670185f",
+      "name": "Lobby TV",
+      "pairing_code": "880093",
+      "playlist_id": "1c03f3d1-07f0-4c7e-bcc5-1aecfeefe834",
+      "app_version": "1.0.0",
+      "status": "playing",
+      "download_status": "in_progress",
+      "last_heartbeat": "2026-01-18T11:44:23.723Z",
+      "createdAt": "2026-01-18T11:36:53.715Z",
+      "updatedAt": "2026-01-18T12:03:31.631Z",
+      "__v": 0,
+      "user_id": "696cc5a2408ba71c209b6359",
+      "device_token": "dc2bb8cd-030c-4321-aa8c-7004da0a10ce"
+    }
+  ]
+}
